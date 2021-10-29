@@ -1,0 +1,39 @@
+author: mongoose-os
+description: Factory Device Config Example
+version: 1.0.0
+
+libs_version: ${mos.version}
+modules_version: ${mos.version}
+mongoose_os_version: ${mos.version}
+
+sources:
+  - src
+
+build_vars:
+  # Defines an extra partition. On ESP32 devices are created
+  # for all data partitions automatically  Encrypted flag is required
+  # to work with flash encryption and is ignored if it's not enabled.
+  # 0x88 is an arbitarry partition subtype and does not matter.
+  ESP_IDF_EXTRA_PARTITION: "conf,data,0x88,0x3fe000,8K,encrypted"
+
+cdefs:
+  # Will try to read device "conf" at offset 0 when loading config level 1.
+  MGOS_CONFIG_DEV_1: '"conf,0"'
+  # Then at 4096 when loading level 2.
+  MGOS_CONFIG_DEV_2: '"conf,4096"'
+
+config_schema:
+  - ["factory", "o", {title: "Factory settings"}]
+  - ["factory.foo", "i", 10, {title: "An int value"}]
+  - ["factory.bar", "s", "", {title: "A string value"}]
+
+libs:
+  - origin: https://github.com/mongoose-os-libs/rpc-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-dev
+  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
+  - origin: https://github.com/mongoose-os-libs/rpc-uart
+#  - origin: https://github.com/mongoose-os-libs/rpc-ws
+#  - origin: https://github.com/mongoose-os-libs/http-server
+#  - origin: https://github.com/mongoose-os-libs/wifi
+
+manifest_version: 2017-09-29
